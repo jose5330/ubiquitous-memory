@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Trinity College ConnectHub - Prototype</title>
+  <link rel="stylesheet" href="./public/style.css">
+  <script type="module" src="/src/index.jsx"></script>
+
+
+</head>
+<body>
+  <main id="root">
+    <!-- Header -->
+    <header class="site-header" role="banner" aria-label="Site header">
+      <div>
+        <div class="brand">Trinity College ConnectHub</div>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="#" aria-current="page">Discussions</a>
+          <a href="#">Documentation</a>
+          <a href="#">Report a bug</a>
+        </nav>
+      </div>
+
+      <div class="small muted">School collaboration prototype</div>
+    </header>
+
+    <!-- Action row -->
+    <div class="action-row" aria-hidden="false">
+      <div style="display:flex;gap:12px;align-items:center;">
+        <button class="btn" aria-haspopup="listbox" aria-expanded="false" aria-label="Filter categories">
+          Categories ▾
+        </button>
+        <div class="floating-add">
+          <button class="btn primary" id="addPostBtn">Add Post</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Left: Feed -->
+    <section class="feed" aria-label="Discussion feed">
+      <!-- Post card 1 - unanswered -->
+      <article class="card" aria-labelledby="post1-title" role="article">
+        <div class="post-meta">
+          <div class="avatar" aria-hidden="true">EW</div>
+          <div>
+            <div style="font-weight:800;">edenwatsonisHOT@67</div>
+            <div class="meta-text">14h ago · In &lt;10 Math Essentials&gt;</div>
+          </div>
+          <div class="status unanswered" role="status" aria-live="polite">This question has not been answered</div>
+        </div>
+
+        <h2 class="post-title" id="post1-title">Is the inverse of multiplication division or subtraction</h2>
+        <p class="post-body">
+          Is it??? who value open, topic-based discussions. This design encourages long-form conversations, organized categories, and a sense of community. For my app, the target
+          market is students aged 13–18 who need a safe, distraction-free platform for academic collaboration.
+        </p>
+
+        <div class="tag-row" aria-hidden="false">
+          <span class="tag">Math</span>
+          <span class="tag">Algebra</span>
+        </div>
+      </article>
+
+      <!-- Post card 2 - answered -->
+      <article class="card" aria-labelledby="post2-title" role="article">
+        <div class="post-meta">
+          <div class="avatar" aria-hidden="true">OH</div>
+          <div>
+            <div style="font-weight:800;">OrangeHARry</div>
+            <div class="meta-text">Yesterday · In &lt;9 Science&gt;</div>
+          </div>
+          <div class="status answered" role="status" aria-live="polite">This question has been answered</div>
+        </div>
+
+        <h2 class="post-title" id="post2-title">What is the difference between alkali and acids</h2>
+        <p class="post-body">
+          science test is in a day am i cooked chat 😅✌️
+        </p>
+
+        <div class="tag-row">
+          <span class="tag">Science</span>
+        </div>
+      </article>
+
+      <!-- Example of an empty-state / load more at the bottom -->
+      <div style="text-align:center; padding:12px;" aria-hidden="false">
+        <button class="btn">Load more</button>
+      </div>
+    </section>
+
+    <!-- Right: Documentation sidebar -->
+    <aside class="docs" aria-label="Documentation sidebar">
+      <div class="card" style="padding:18px;">
+        <div class="title">Explore Documentation</div>
+        <p class="small">Quick links to community resources</p>
+
+        <div style="height:12px;"></div>
+
+        <div class="doc-grid" role="list">
+          <div class="doc-card" role="listitem">
+            <div class="doc-thumb" aria-hidden="true">PDF</div>
+            <div style="font-weight:700; font-size:13px;">Cheat Sheets</div>
+          </div>
+          <div class="doc-card" role="listitem">
+            <div class="doc-thumb" aria-hidden="true">PPR</div>
+            <div style="font-weight:700; font-size:13px;">Past Papers</div>
+          </div>
+          <div class="doc-card" role="listitem">
+            <div class="doc-thumb" aria-hidden="true">IMG</div>
+            <div style="font-weight:700; font-size:13px;">Acids</div>
+          </div>
+          
+        </div>
+      </div>
+    </aside>
+  </main>
+</body>
+</html>
