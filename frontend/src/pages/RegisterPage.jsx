@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 
 
-export default function LoginPage() {
+export default function RegisterPage() {
 
+  const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -12,12 +13,12 @@ export default function LoginPage() {
   
   const login = (event) => {
     event.preventDefault(); // Prevents the default form submission behavior , which is annoying asl
-    fetch('http://localhost:8080/api/auth/login', {
+    fetch('http://localhost:8080/api/auth/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ username, password , email })
     }).then(response => {
       if (response.ok) {
         return response.text();
@@ -29,7 +30,7 @@ export default function LoginPage() {
       
       Cookies.set('jwt', data, { expires: 7, secure: true, sameSite: 'none' });
 
-      navigate('/discussions'); // Use navigate to change the route
+      navigate('/verify'); // Use navigate to change the route
       
     }).catch(error => {
       console.error('Error during login:', error);
@@ -40,8 +41,17 @@ export default function LoginPage() {
   return (
     <section id = "authWrapper">
       <section id="authSection" className="card card--login">
-      <h2>Sign in</h2>
+      <h2>Sign Up!!!!</h2>
       <form id="loginForm" className="form" onSubmit={login}>
+        <label>
+          <span>Email</span>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </label>
         <label>
           <span>Username</span>
           <input

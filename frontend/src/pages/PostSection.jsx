@@ -2,6 +2,7 @@ import Post from "../components/Post";
 import React, { useEffect, useState ,useRef} from "react";
 import PostModal from "../components/PostModal";
 import { useNavigate, useParams } from 'react-router-dom';
+import Header from "../components/Header";
 
 export default function Discussions() {
 
@@ -20,6 +21,8 @@ export default function Discussions() {
 
   const loadMoreRef = useRef();
 
+  
+
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && hasMore && !loading) {
@@ -31,10 +34,28 @@ export default function Discussions() {
     return () => observer.disconnect();
   }, [hasMore, loading]);
 
-  const onSend = (newPost) => {
+  const onUpdate = (id) => {
+    console.log("New reply received in PostSection:", id);
     // Logic to send the post data to the server would go here
     setShowModal(false);
-    setReplies([newPost, ...replies]);
+    setPost(prev => {
+      return {...prev, answered: true};
+    });
+    setReplies(prev => prev.map(reply => {
+      if (reply.id === id) {
+        console.log("Marking reply as answer:", {...reply, isAnswer: true});
+        return {...reply, isAnswer: true}
+      }
+      return reply;
+    }));
+  }
+
+   const onSend = (id) => {
+    console.log("New reply received in PostSection:", id);
+    // Logic to send the post data to the server would go here
+    setShowModal(false);
+
+    setReplies(prev => [{...id, isAnswer: false}, ...prev]);
   }
 
   const fetchReplies = () => {
@@ -64,7 +85,7 @@ export default function Discussions() {
       .catch(error => console.error('Error fetching tasks:', error));
   }
 
-  useEffect(fetchReplies,[]);
+  //useEffect(fetchReplies,[]);
 
   useEffect(() => {
     if (!id) return;
@@ -80,29 +101,14 @@ export default function Discussions() {
       })
   }, [id]);
   
-
   return (
     <main role="root" className="container">
-      <header className="top-bar" role="banner"> 
-        <p className="logo">ConnectHub</p>
-        <img className="profile-pic" src="./public/images/sbeve.jpg"/>
-      </header>
+      <Header />
+
 
       {showModal && <PostModal parentId={id} onFullScreen = {() => useNavigate("/")} onSend = {onSend} onClose = {() => setShowModal(false)} />}
 
-      <header className="site-header" role="banner" aria-label="Site header">
-        
-        <div>
-          <div className="brand">Trinity College ConnectHub</div>
-          <nav className="site-nav" aria-label="Primary">
-            <a href="#" aria-current="page">Discussions</a>
-            <a href="#">Documentation</a>
-            <a href="#">Report a bug</a>
-          </nav>
-        </div>
-        <div className="small muted">School collaboration prototype</div>
-      </header>
-
+      
       <div className="action-row" aria-hidden="false">
         <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
           <div className="floating-add">
@@ -128,8 +134,13 @@ export default function Discussions() {
         {replies.map((reply) => {
           return (
             <Post
+              onSend = {onUpdate}
+              isAnswer={reply.isAnswer}
+              isOwner={post?.isOwner}
               key={reply.id}
               isReply={true}
+              parentId={id}
+              postId={reply.id}
               username={reply.username}
               subject={reply.subject}
               title={reply.title}
@@ -152,42 +163,7 @@ export default function Discussions() {
         </div>
       </section>
 
-      <aside className="docs" aria-label="Documentation sidebar">
-        <div className="card" style={{ padding: "18px" }}>
-          <div className="title">Explore Documentation</div>
-          <p className="small">Quick links to community resources</p>
-
-          <div style={{ height: "12px" }}></div>
-
-          <div id="doc-grid" className="doc-grid" role="list">
-            <div className="doc-card" role="listitem">
-              <div className="doc-thumb" aria-hidden="true">
-                PDF
-              </div>
-              <div style={{ fontWeight: 700, fontSize: "13px" }}>
-                Cheat Sheets
-              </div>
-            </div>
-            <div className="doc-card" role="listitem">
-              <div className="doc-thumb" aria-hidden="true">
-                PPR
-              </div>
-              <div style={{ fontWeight: 700, fontSize: "13px" }}>
-                Past Papers
-              </div>
-            </div>
-            <div className="doc-card" role="listitem">
-              <div className="doc-thumb" aria-hidden="true">
-                IMG
-              </div>
-              <div style={{ fontWeight: 700, fontSize: "13px" }}>
-                Acids
-              </div>
-            </div>
-           
-          </div>
-        </div>
-      </aside>
+      
     </main>
   );
 }

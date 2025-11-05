@@ -39,10 +39,12 @@ public class JwtFilter extends OncePerRequestFilter {
         String username = null;
         System.out.println("JWT Filter is running...");
 
-        if (request.getServletPath().startsWith("/api/auth")) {
-            System.out.println("skipping JWT check for authentication endpoint");
-            filterChain.doFilter(request, response); // skip JWT check for login
-            return;
+        
+        String path = request.getServletPath();
+        if ("/api/auth/login".equals(path) || "/api/auth/register".equals(path)) {
+            System.out.println("skipping JWT check for login/register endpoint");
+           filterChain.doFilter(request, response); // skip JWT check for these endpoints
+           return;        
         }
 
 

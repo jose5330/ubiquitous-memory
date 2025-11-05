@@ -2,6 +2,7 @@ import Post from "../components/Post";
 import React, { useEffect, useState ,useRef} from "react";
 import PostModal from "../components/PostModal";
 import { useNavigate } from 'react-router-dom';
+import Header from "../components/Header";
 
 export default function Discussions() {
 
@@ -60,29 +61,14 @@ export default function Discussions() {
       .catch(error => console.error('Error fetching tasks:', error));
   }
 
-  useEffect(fetchPosts,[]);
+  //useEffect(fetchPosts,[]);
 
   return (
     <main role="root" className="container">
-      <header className="top-bar" role="banner"> 
-        <p className="logo">ConnectHub</p>
-        <img className="profile-pic" src="./public/images/sbeve.jpg"/>
-      </header>
+      <Header />
 
       {showModal && <PostModal onFullScreen = {() => useNavigate("/")} onSend = {onSend} onClose = {() => setShowModal(false)} />}
 
-      <header className="site-header" role="banner" aria-label="Site header">
-        
-        <div>
-          <div className="brand">Trinity College ConnectHub</div>
-          <nav className="site-nav" aria-label="Primary">
-            <a href="#" aria-current="page">Discussions</a>
-            <a href="#">Documentation</a>
-            <a href="#">Report a bug</a>
-          </nav>
-        </div>
-        <div className="small muted">School collaboration prototype</div>
-      </header>
 
       <div className="action-row" aria-hidden="false">
         <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>

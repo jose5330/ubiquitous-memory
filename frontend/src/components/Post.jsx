@@ -1,8 +1,33 @@
 import { useNavigate } from "react-router-dom";
 import React from "react";
 
-export default function Post({isReply,id,username,subject, createdAt, title, body, tags, answered}) {
+export default function Post({onSend,postId,parentId, isAnswer,isOwner,isReply,id,username,subject, createdAt, title, body, tags, answered}) {
   
+  const handleCompletion = () => {
+      
+      fetch(`http://localhost:8080/api/user/posts/${parentId}/${postId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      })
+        
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+          
+        }}).then(data => {
+          console.log('Success:', data);
+          onSend(postId);
+          
+        })
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+      });
+      
+    }
+
   
   const navigate = useNavigate();
 
@@ -60,6 +85,13 @@ export default function Post({isReply,id,username,subject, createdAt, title, bod
             >
               {answered ? "This question has been answered" : "This question has not been answered" }
             </div>}
+            {isAnswer && <div
+              className = "status answered"
+              role="status"
+              aria-live="polite"
+            >
+              Solution
+            </div>}
           </div>
 
           <h2 className="post-title" id="post1-title">
@@ -69,8 +101,14 @@ export default function Post({isReply,id,username,subject, createdAt, title, bod
             {body || "No content provided."}
           </p>
           {!isReply && <button className="btn" onClick={() => navigate(`/discussions/post/${id}`)}>
-            <img className="icon" src="./public/images/icons/chat-78-32.png"/>
+            <img className="icon" src="/images/icons/chat-78-32.png" alt="chat"/>
             <span className="meta-text" >3</span>
+          </button>}
+
+          {(isOwner && isAnswer !== true) && <button className="btn" onClick={() => handleCompletion()}>
+            
+            <img className="icon" src="/images/icons/check.png" alt="chat"/>
+            <span className="meta-text" >Mark as Solution</span>
           </button>}
 
           <div className="tag-row" aria-hidden="false">

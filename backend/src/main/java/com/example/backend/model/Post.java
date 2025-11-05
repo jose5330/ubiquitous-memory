@@ -10,6 +10,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+
+
 @Entity
 @Table(name = "posts")
 public class Post {
@@ -36,11 +38,17 @@ public class Post {
     @Column(name = "parent_id")
     private Integer parentId;
 
+    @Column(name = "is_answer")
+    private boolean isAnswer;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
 
     // Getters and Setters
+    public boolean isAnswer() { return isAnswer; }
+    public void setAnswer(boolean isAnswer) { this.isAnswer = isAnswer; }
+
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     

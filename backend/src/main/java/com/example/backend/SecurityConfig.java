@@ -21,6 +21,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import java.util.List;
 
 import com.example.backend.service.MyUserDetailsService;
+import com.example.backend.service.RateLimitFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -31,18 +32,23 @@ public class SecurityConfig {
 
     @Autowired
     private JwtFilter jwtFilter;
+
+    @Autowired
+    private RateLimitFilter rateLimitFilter;
     
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll() // allow anyone to access these endpoints
+                .requestMatchers("/api/auth/login", "/api/auth/signup").permitAll() // allow anyone to access these endpoints
+                .requestMatchers("api/auth/token","api/auth/verify").hasRole("UNSUB")
                 .anyRequest()
-                .authenticated())
+                .hasAnyRole("USER"))
             //.formLogin(Customizer.withDefaults())
             .httpBasic(Customizer.withDefaults())
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(rateLimitFilter, jwtFilter.getClass())
             .cors(cors -> Customizer.withDefaults()) // enable CORS
             .csrf(csrf -> csrf.disable()); // disable CSRF for testing purposes
             

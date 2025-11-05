@@ -11,11 +11,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,7 +35,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestController()
 @EnableMethodSecurity
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class PostController {
 
     PostResponseDTO convertToResponseDTO(Post post) {
@@ -41,9 +44,12 @@ public class PostController {
         dto.title = post.getTitle();
         dto.body = post.getBody();
         dto.parentId = post.getParentId();
+        System.out.println("Post answered status: " + post.isAnswered());
         dto.answered = post.isAnswered();
+        
         dto.subject = post.getSubject();
         dto.createdAt = post.getCreatedAt();
+        dto.isAnswer = post.isAnswer();
         dto.username = post.getUser() != null ? post.getUser().getUsername() : null;
         dto.userPfp = "https://ui-avatars.com/api/?name=" + (post.getUser() != null ? post.getUser().getUsername() : "Unknown") + "&background=random&size=128";
         return dto;
@@ -67,7 +73,7 @@ public class PostController {
         throw new Exception("User not authenticated");
     }
 
-    @GetMapping("/user/posts")
+    @GetMapping("/posts")
     public Page<PostResponseDTO> getPosts(
     @RequestParam(defaultValue = "0") int page,
     @RequestParam(defaultValue = "10") int size
@@ -77,7 +83,7 @@ public class PostController {
         return  posts.map(z -> convertToResponseDTO(z));
     }
 
-     @GetMapping("/user/posts/replies/{parentId}")
+    @GetMapping("/posts/replies/{parentId}")
     public Page<PostResponseDTO> getReplies(
     @PathVariable Integer parentId,
     @RequestParam(defaultValue = "0") int page,
@@ -91,7 +97,7 @@ public class PostController {
     
     
 
-    @GetMapping("/user/posts/{id}")
+    @GetMapping("/posts/{id}")
     public PostResponseDTO getPost(HttpServletRequest request,
         @PathVariable Integer id)
         
@@ -99,11 +105,46 @@ public class PostController {
         Optional<Post> postOpt = postRepo.findById(id);
         if (postOpt.isPresent()) {
             Post post = postOpt.get();
-            return convertToResponseDTO(post);
+            PostResponseDTO postDTO = convertToResponseDTO(post);
+            Authentication authentication = (Authentication) SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String && authentication.getPrincipal().equals("anonymousUser"))) {
+                UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+                postDTO.isOwner = post.getUser() != null && post.getUser().getId().equals(userPrincipal.getId());
+            } else {
+                postDTO.isOwner = false;
+            }
+            return postDTO;
         } else {
             throw new Exception("Post not found");
         }
 
+    }
+
+    @PutMapping("/posts/{id}/{replyId}")
+    public PostResponseDTO ToggleAnswer(HttpServletRequest request,
+        @PathVariable Integer id,
+        @PathVariable Integer replyId) throws Exception
+    {
+        Optional<Post> postOpt = postRepo.findById(id);
+        Optional<Post> replyOpt = postRepo.findById(replyId);
+
+        if (!postOpt.isPresent() || !replyOpt.isPresent()) {
+            throw new Exception("Post or Reply not found");
+        }
+        Post post = postOpt.get();
+        Post reply = replyOpt.get();
+
+        Authentication authentication = (Authentication) SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        if (!post.getUser().getId().equals(userPrincipal.getId())) {
+            throw new Exception("Unauthorized");
+        }
+        post.setAnswered(true);
+        postRepo.save(post);
+        reply.setAnswer(!reply.isAnswer());
+        postRepo.save(reply);
+
+        return convertToResponseDTO(post);
     }
 
     @DeleteMapping("/admin/tasks/{id}")
@@ -133,7 +174,7 @@ public class PostController {
         }
     }
 
-    @PostMapping("/user/posts")
+    @PostMapping("/posts")
     //@PreAuthorize("hasRole('ADMIN')")
     public PostResponseDTO createPost(@RequestBody PostRequestDTO  postDTO) {
         Authentication authentication = (Authentication) SecurityContextHolder.getContext().getAuthentication();
@@ -144,6 +185,7 @@ public class PostController {
         post.setBody(postDTO.body);
         post.setParentId(postDTO.parentId);
         post.setAnswered(false);
+        post.setAnswer(false);
         post.setSubject(postDTO.subject);
         post.setCreatedAt(postDTO.createdAt);
         postRepo.save(post);
@@ -184,10 +226,13 @@ class PostResponseDTO {
     public String subject;
 
     public boolean answered;
+    public Boolean isAnswer;
     public LocalDateTime createdAt;
 
     public String username;
     public String userPfp;
+
+    public boolean isOwner;
 
     public List<PostResponseDTO> replies;
 }

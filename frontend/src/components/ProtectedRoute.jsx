@@ -6,6 +6,7 @@ function ProtectedRoute({ children, roleAccess = "user" }) {
   const token = Cookies.get("jwt");
 
   if (!token) {
+    console.log("No token found, redirecting to login.");
     return <Navigate to="/login" />;
   }
 

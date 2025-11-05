@@ -4,14 +4,16 @@ import Discussions from './pages/Discussions';
 import LoginPage from './pages/LoginPage';
 import PostSection from './pages/PostSection';
 import ProtectedRoute from './components/ProtectedRoute';
-
+import RegisterPage from './pages/RegisterPage';
+import TokenPage from './pages/TokenPage';
 
 function App() {
   return (
       <Router>
         <Routes>
-
+          <Route path={"/verify" } element={<ProtectedRoute><TokenPage/></ProtectedRoute>} />
           <Route path={"/login"} element={<LoginPage />} />
+          <Route path={"/register"} element={<RegisterPage />} />
           <Route path={"/discussions" } element={<ProtectedRoute><Discussions/></ProtectedRoute>} />
           <Route path={"/" } element={<ProtectedRoute><Discussions/></ProtectedRoute>} />
           
