@@ -12,7 +12,7 @@ COPY src ./src
 # Build the app (skip tests for faster deploys)
 RUN mvn clean package -DskipTests
 
-# === Stage 2: Run the application ===
+
 FROM eclipse-temurin:21-jdk
 WORKDIR /app
 
