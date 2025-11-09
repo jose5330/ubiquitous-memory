@@ -5,7 +5,7 @@ export default function Post({onSend,postId,parentId, isAnswer,isOwner,isReply,i
   
   const handleCompletion = () => {
       
-      fetch(`http://localhost:8080/api/user/posts/${parentId}/${postId}`, {
+      fetch(`${import.meta.env.VITE_API_URL}/api/user/posts/${parentId}/${postId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

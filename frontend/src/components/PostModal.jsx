@@ -18,7 +18,7 @@ export default function PostModal({parentId, onClose, onSend}) {
           parentId: parentId ?? null,
         }
       
-      fetch('http://localhost:8080/api/user/posts', {
+      fetch(`${import.meta.env.VITE_API_URL}/api/user/posts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

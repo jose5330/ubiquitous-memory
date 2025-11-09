@@ -38,7 +38,7 @@ export default function Discussions() {
     if (loading || !hasMore) return;
     setLoading(true);
     
-    fetch(`http://localhost:8080/api/user/posts?page=${page}&size=4`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/user/posts?page=${page}&size=4`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'

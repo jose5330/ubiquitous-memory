@@ -30,7 +30,7 @@ export default function RegisterPage() {
 
   const verify = (event) => {
     event.preventDefault(); // Prevents the default form submission behavior , which is annoying asl
-    fetch(`http://localhost:8080/api/auth/verify?token=${token}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/auth/verify?token=${token}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
