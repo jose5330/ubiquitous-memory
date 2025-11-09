@@ -68,7 +68,7 @@ public class SecurityConfig {
         provider.setPasswordEncoder(new BCryptPasswordEncoder(8));
         return provider;
     }
-
+   
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
