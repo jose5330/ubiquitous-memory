@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -22,9 +23,9 @@ import com.example.backend.model.User;
 
 @Service
 public class JWTService {
-    private String secretKey = "Hello World"; // This should be stored securely, not hardcoded, but for demo purposes it's fine.
+    private String secretKey; // This should be stored securely, not hardcoded, but for demo purposes it's fine.
 
-    public JWTService() {
+    public JWTService( @Value("${jwt.secret}") String secret) {
         try {
             KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
             SecretKey sk = keyGen.generateKey();
