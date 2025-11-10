@@ -41,13 +41,15 @@ public class JWTService {
         System.out.println("user: " + user.getUsername() + " role: " + user.getRole());
         claims.put("role",user.getRole());
 
-        return Jwts.builder()
+        String jwt = Jwts.builder()
                 .claims(claims)
                 .subject(username)
                 .issuedAt( new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))  // 10 minutes;
                 .signWith(getKey())
                 .compact();
+        System.out.println("Generated token: [" + jwt + "]");
+        return jwt;
             
     }
 
