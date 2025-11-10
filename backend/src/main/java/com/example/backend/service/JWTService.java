@@ -26,14 +26,7 @@ public class JWTService {
     private String secretKey; // This should be stored securely, not hardcoded, but for demo purposes it's fine.
 
     public JWTService( @Value("${jwt.secret}") String secret) {
-        try {
-            KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-            SecretKey sk = keyGen.generateKey();
-            this.secretKey = Base64.getEncoder().encodeToString(sk.getEncoded()); // Convert SecretKey to a string representation
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
+       this.secretKey = secret; // Convert SecretKey to a string representation
     }
 
     public String generateToken(User user) {
