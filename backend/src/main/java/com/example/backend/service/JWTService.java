@@ -26,7 +26,7 @@ public class JWTService {
     private String secretKey; // This should be stored securely, not hardcoded, but for demo purposes it's fine.
 
     public JWTService( @Value("${jwt.secret}") String secret) {
-       this.secretKey = secret; // Convert SecretKey to a string representation
+       this.secretKey = secret.trim().replace("\"", "").replace("'", "");
     }
 
     public String generateToken(User user) {
