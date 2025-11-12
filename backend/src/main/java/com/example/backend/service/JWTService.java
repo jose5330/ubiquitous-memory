@@ -34,6 +34,7 @@ public class JWTService {
         Map<String, Object> claims = new HashMap<>();
         System.out.println("user: " + user.getUsername() + " role: " + user.getRole());
         claims.put("role",user.getRole());
+        System.out.println("JWT SECRET during generation: " + secretKey);
 
         String jwt = Jwts.builder()
                 .claims(claims)
@@ -53,6 +54,7 @@ public class JWTService {
     }
 
     public String extractUsername(String token) {
+        System.out.println("JWT SECRET during verification: " + secretKey);
         // extract the username from jwt token
         return extractClaim(token, Claims::getSubject);
     }
