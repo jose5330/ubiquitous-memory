@@ -26,7 +26,7 @@ public class JWTService {
     private String secretKey; // This should be stored securely, not hardcoded, but for demo purposes it's fine.
 
     public JWTService( @Value("${jwt.secret}") String secret) {
-       this.secretKey = secret.trim().replace("\"", "").replace("'", "");
+       this.secretKey = secret.trim().replace("\n","").replace("\"", "").replace("'", "");
     }
 
     public String generateToken(User user) {
@@ -49,7 +49,7 @@ public class JWTService {
     }
 
     private SecretKey getKey() {
-        this.secretKey = this.secretKey.trim().replace("\"", "").replace("'", "");
+        
         System.out.println("JWTService: Using aaaaa secret key: " + this.secretKey);
         try {
             Base64.getDecoder().decode(this.secretKey);
