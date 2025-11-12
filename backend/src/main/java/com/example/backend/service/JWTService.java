@@ -49,7 +49,15 @@ public class JWTService {
     }
 
     private SecretKey getKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(this.secretKey);
+        this.secretKey = this.secretKey.trim().replace("\"", "").replace("'", "");
+        System.out.println("JWTService: Using aaaaa secret key: " + this.secretKey);
+        try {
+            Base64.getDecoder().decode(this.secretKey);
+            System.out.println("✅ Secret is valid Base64");
+        } catch (Exception e) {
+            System.err.println("❌ Base64 decode failed: " + e.getMessage());
+        }
+             byte[] keyBytes = Decoders.BASE64.decode(this.secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
