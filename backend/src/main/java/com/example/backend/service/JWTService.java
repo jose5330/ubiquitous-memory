@@ -16,6 +16,7 @@ import javax.crypto.SecretKey;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
@@ -41,7 +42,7 @@ public class JWTService {
                 .subject(username)
                 .issuedAt( new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))  // 10 minutes;
-                .signWith(getKey())
+                .signWith(getKey(),Jwts.SIG.HS256)
                 .compact();
         System.out.println("Generated token: [" + jwt + "]");
         return jwt;
