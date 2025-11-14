@@ -29,7 +29,7 @@ public class UserController {
     private UserRepo userRepo;
 
     @PostMapping("/verify")
-    public String verifyToken(@RequestParam String token) {
+    public ResponseEntity<String>  verifyToken(@RequestParam String token) {
         System.out.println("Verify attempt for token: " + token);
         return userService.verifyToken(token);
     }
@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signAccount(@RequestBody User user) {
+    public ResponseEntity<String> signAccount(@RequestBody User user) {
         System.out.println("Incoming user: " + (user.getId()) + " " + user.getUsername());
         return userService.signUser(user);
     }
@@ -58,7 +58,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
+    public ResponseEntity<String>  login(@RequestBody User user) {
         System.out.println("Login attempt for user: " + user);
         return userService.verify(user);
     }

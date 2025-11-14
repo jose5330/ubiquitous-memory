@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,9 +42,23 @@ public class UserService {
     @Autowired
     private JWTService jwtService;
 
+    ResponseEntity<String> Cookie(String token) {
+        ResponseCookie cookie = ResponseCookie.from("jwt", token)
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("None")    
+            .path("/")
+            .domain("connecthub-g1qb.onrender.com") 
+            .maxAge(10 * 60 * 60)  // 10 hours
+            .build();
+        return ResponseEntity.ok()
+        .header(HttpHeaders.SET_COOKIE, cookie.toString())
+        .body("Logged in");
+    }
+
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
 
-    public String verifyToken(String token) {
+    public ResponseEntity<String> verifyToken(String token) {
         VerificationToken verification = tokenRepo.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("Invalid token"));
 
@@ -51,7 +67,7 @@ public class UserService {
         user = userRepo.save(user);
 
         tokenRepo.delete(verification);
-        return jwtService.generateToken(user);
+        return Cookie(jwtService.generateToken(user));
     }
 
     public User registerUser(User user) {
@@ -59,7 +75,7 @@ public class UserService {
         return userRepo.save(user);
     }
 
-    public String signUser(User user) {
+    public ResponseEntity<String> signUser(User user) {
         User nonDB = user;
 
         
@@ -68,8 +84,7 @@ public class UserService {
 
         user = userRepo.save(user);
         
-        String jwt = jwtService.generateToken(user);
-        return jwt;
+        return Cookie(jwtService.generateToken(user));
     }
 
     public void sendVerificationToken(User user) {
@@ -84,10 +99,10 @@ public class UserService {
         emailService.sendVerificationEmail(user.getEmail(), token);
     }
 
-    public String verify(User user) {
+    public ResponseEntity<String> verify(User user) {
         User dbUser = userRepo.findByUsername(user.getUsername());
         if (dbUser == null) {
-            return "User " + user.getUsername() + " not found.";
+            return ResponseEntity.status(404).body("User not found");
         }
 
         System.out.println("Class of user: " + user.getClass());
@@ -97,9 +112,9 @@ public class UserService {
             new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()) );
         if (authentication.isAuthenticated()) {
             System.out.println("yo uuh this should work");
-            return jwtService.generateToken(dbUser);
+            return Cookie(jwtService.generateToken(user));
         } else {
-            return "Authentication failed for user " + user.getUsername() + ".";
+            return ResponseEntity.status(401).body("Authentication failed");
         }
     }
 }

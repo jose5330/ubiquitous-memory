@@ -28,7 +28,7 @@ export default function RegisterPage() {
     }).then(data => {
       // Set the cookie
       
-      Cookies.set('jwt', data, { expires: 7, secure: true, sameSite: 'none',domain: import.meta.env.VITE_API_URL });
+      
 
       navigate('/verify'); // Use navigate to change the route
       
