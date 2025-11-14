@@ -40,7 +40,8 @@ public class UserController {
         return ResponseEntity.ok(Map.of("authenticated", false));
     }
 
-    User user = (User) auth.getPrincipal();
+    UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+    User user = userRepo.findByUsername(userPrincipal.getUsername());
     return ResponseEntity.ok(Map.of(
         "authenticated", true,
         "username", user.getUsername(),
