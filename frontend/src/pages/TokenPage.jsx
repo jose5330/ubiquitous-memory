@@ -45,7 +45,7 @@ export default function RegisterPage() {
     }).then(data => {
       // Set the cookie
             
-            Cookies.set('jwt', data, { expires: 7, secure: false, sameSite: 'lax' });
+            Cookies.set('jwt', data, { expires: 7, secure: false, sameSite: 'lax',domain: import.meta.env.VITE_API_URL  });
       
             navigate('/discussions'); // Use navigate to change the route
     }).catch(error => {

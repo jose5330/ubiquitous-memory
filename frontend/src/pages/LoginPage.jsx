@@ -27,7 +27,7 @@ export default function LoginPage() {
     }).then(data => {
       // Set the cookie
       
-      Cookies.set('jwt', data, { expires: 7, secure: true, sameSite: 'none' });
+      Cookies.set('jwt', data, { expires: 7, secure: true, sameSite: 'none',domain: import.meta.env.VITE_API_URL  });
 
       navigate('/discussions'); // Use navigate to change the route
       
