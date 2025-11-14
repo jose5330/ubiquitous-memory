@@ -1,5 +1,7 @@
 package com.example.backend.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.backend.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 import com.example.backend.model.User;
 import com.example.backend.model.UserPrincipal;
@@ -27,6 +31,22 @@ public class UserController {
 
     @Autowired
     private UserRepo userRepo;
+
+    @GetMapping("/me")
+    public ResponseEntity<?> me(HttpServletRequest request) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+    if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+        return ResponseEntity.ok(Map.of("authenticated", false));
+    }
+
+    User user = (User) auth.getPrincipal();
+    return ResponseEntity.ok(Map.of(
+        "authenticated", true,
+        "username", user.getUsername(),
+        "role", user.getRole()
+    ));
+}
 
     @PostMapping("/verify")
     public ResponseEntity<String>  verifyToken(@RequestParam String token) {
