@@ -48,7 +48,7 @@ public class UserService {
             .secure(true)
             .sameSite("None")    
             .path("/")
-            .domain("https://connecthub-g1qb.onrender.com") 
+            .domain("connecthub-g1qb.onrender.com") 
             .maxAge(10 * 60 * 60)  // 10 hours
             .build();
         return ResponseEntity.ok()
