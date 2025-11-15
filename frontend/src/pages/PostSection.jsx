@@ -89,7 +89,7 @@ export default function Discussions() {
 
   useEffect(() => {
     if (!id) return;
-    fetch(`http://localhost:8080/api/user/posts/${id}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/user/posts/${id}`, {
       credentials: "include",
     })
       .then(res => {
