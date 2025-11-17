@@ -60,6 +60,9 @@ export default function RegisterPage() {
       <h2>Sign Up!!!!</h2>
       <form id="loginForm" className="form" onSubmit={verify}>
         <p>Check your email for your verification token </p>
+        <p> {"note the mail sender system is down atm , so just click the get token button, and ask me (Christo) for the token directly :)"}
+
+        </p>
         <label>
           <span>Token</span>
           <input
