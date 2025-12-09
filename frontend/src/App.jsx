@@ -6,6 +6,7 @@ import PostSection from './pages/PostSection';
 import ProtectedRoute from './components/ProtectedRoute';
 import RegisterPage from './pages/RegisterPage';
 import TokenPage from './pages/TokenPage';
+import UserPage from './pages/UserPage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path={"/register"} element={<RegisterPage />} />
           <Route path={"/discussions" } element={<ProtectedRoute><Discussions/></ProtectedRoute>} />
           <Route path={"/" } element={<ProtectedRoute><Discussions/></ProtectedRoute>} />
+          <Route path={"/user/:id" } element={<ProtectedRoute><UserPage/></ProtectedRoute>} />
           
           <Route path={"/discussions/post/:id" } element={<ProtectedRoute><PostSection/></ProtectedRoute>} />
         </Routes>

@@ -25,6 +25,9 @@ public class User {
     @Column(name = "role")
     private String role;
 
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
     // Getters and Setters
     public Integer getId() {return id;}
     public void setId(Integer id) {this.id = id;}
@@ -40,6 +43,9 @@ public class User {
 
     public String getRole() {return role;}
     public void setRole(String role) {this.role = role;}
+
+    public String getAvatarUrl() {return avatarUrl;}
+    public void setAvatarUrl(String avatarUrl) {this.avatarUrl = avatarUrl;}
 
     public User() {}
 }

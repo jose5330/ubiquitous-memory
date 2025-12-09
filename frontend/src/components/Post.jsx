@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import React from "react";
 
-export default function Post({onSend,postId,parentId, isAnswer,isOwner,isReply,id,username,subject, createdAt, title, body, tags, answered}) {
+export default function Post({onSend,postId,parentId, isAnswer,isOwner,isReply,id,username,subject, createdAt, title, body, tags, answered,userAvatar}) {
   
   const handleCompletion = () => {
       
@@ -28,6 +28,7 @@ export default function Post({onSend,postId,parentId, isAnswer,isOwner,isReply,i
       
     }
 
+  
   
   const navigate = useNavigate();
 
@@ -67,11 +68,11 @@ export default function Post({onSend,postId,parentId, isAnswer,isOwner,isReply,i
       timeAgoText = `${secondsAgo} seconds ago`;
     }
     
-    
+    userAvatar = userAvatar || "https://img.freepik.com/premium-vector/avatar-guest-vector-icon-illustration_1304166-97.jpg";
     
     return (<article className="card"  role="article">
           <div className="post-meta">
-            <div className="avatar" aria-hidden="true">EW</div>
+            {userAvatar && <img  className="avatar" src={userAvatar+`?time=${Date.now()}`} alt="" />}
             <div>
               <div style={{ fontWeight: 800 }}>{username}</div>
               <div className="meta-text">

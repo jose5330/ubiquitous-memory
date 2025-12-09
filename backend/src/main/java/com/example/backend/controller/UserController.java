@@ -13,13 +13,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.backend.service.UserService;
 
+import jakarta.mail.Multipart;
 import jakarta.servlet.http.HttpServletRequest;
 
 import com.example.backend.model.User;
 import com.example.backend.model.UserPrincipal;
 import com.example.backend.repository.UserRepo;
+
+import com.example.backend.service.S3Service;
 
 
 
@@ -31,6 +36,9 @@ public class UserController {
 
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private S3Service s3Service;
 
     @GetMapping("/me")
     public ResponseEntity<?> me(HttpServletRequest request) {
@@ -45,7 +53,9 @@ public class UserController {
     return ResponseEntity.ok(Map.of(
         "authenticated", true,
         "username", user.getUsername(),
-        "role", user.getRole()
+        "role", user.getRole(),
+        "id", user.getId(),
+        "userAvatar", user.getAvatarUrl() != null ? user.getAvatarUrl() : ""
     ));
 }
 
@@ -83,4 +93,17 @@ public class UserController {
         System.out.println("Login attempt for user: " + user);
         return userService.verify(user);
     }
+    
+    @PostMapping("/uploadAvatar")
+    @PreAuthorize("hasRole('USER')")
+    public void uploadAvatar(@RequestParam("file") MultipartFile fileData) throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        User user = userRepo.findByUsername(userPrincipal.getUsername());
+        String fileUrl = s3Service.uploadFile(fileData, user.getUsername());
+        System.out.println("File uploaded to URL: " + fileUrl );
+        user.setAvatarUrl(fileUrl);
+        userRepo.save(user);
+        System.out.println("Updating user avatar URL to: " + user.getAvatarUrl());
+    } 
 }

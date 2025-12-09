@@ -95,6 +95,7 @@ export default function Discussions() {
               id={post.id}
               key={post.id}
               isReply={false}
+              userAvatar={post.userAvatar}
               username={post.username}
               subject={post.subject}
               title={post.title}

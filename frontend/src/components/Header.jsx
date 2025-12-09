@@ -1,12 +1,28 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import GetUserData from "../functions/GetUserData";
 
 export default function Header() {
     const navigate = useNavigate();
+
+
+    const [userData, setUserData] = useState(null);
+
+    useEffect(() => {
+      GetUserData().then(data=>{
+        console.log("Header fetched user data:", data);
+        setUserData(data);
+      });
+    }
+    , []);
+
+    console.log("Header User Data:", userData);
+
     return (<div>
          <header className="top-bar" role="banner"> 
         <p className="logo">ConnectHub</p>
-        <img className="profile-pic" src="./public/images/sbeve.jpg"/>
+        {userData && <img onClick={() => navigate(`/user/${userData && userData.id}`)} className="profile-pic" src={userData.userAvatar+`?time=${Date.now()}`}/>}
       </header>
 
       <header className="site-header" role="banner" aria-label="Site header">

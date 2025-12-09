@@ -24,7 +24,7 @@ import com.example.backend.model.User;
 
 @Service
 public class JWTService {
-    private String secretKey; // This should be stored securely, not hardcoded, but for demo purposes it's fine.
+    private String secretKey; 
 
     public JWTService( @Value("${jwt.secret}") String secret) {
        this.secretKey = secret.trim().replace("\n","").replace("\"", "").replace("'", "");

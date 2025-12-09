@@ -126,6 +126,7 @@ export default function Discussions() {
               title={post.title}
               createdAt={post.createdAt}
               body={post.body}
+              userAvatar={post.userAvatar}
               tags={post.tags ? post.tags.split(",") : []}
               answered={post.answered}
             />}
@@ -138,6 +139,7 @@ export default function Discussions() {
               isAnswer={reply.isAnswer}
               isOwner={post?.isOwner}
               key={reply.id}
+              userAvatar={post.userAvatar}
               isReply={true}
               parentId={id}
               postId={reply.id}

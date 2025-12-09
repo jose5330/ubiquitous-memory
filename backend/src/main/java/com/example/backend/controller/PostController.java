@@ -51,7 +51,7 @@ public class PostController {
         dto.createdAt = post.getCreatedAt();
         dto.isAnswer = post.isAnswer();
         dto.username = post.getUser() != null ? post.getUser().getUsername() : null;
-        dto.userPfp = "https://ui-avatars.com/api/?name=" + (post.getUser() != null ? post.getUser().getUsername() : "Unknown") + "&background=random&size=128";
+        dto.userAvatar = post.getUser() != null ? post.getUser().getAvatarUrl() : null;
         return dto;
     }
     
@@ -230,7 +230,7 @@ class PostResponseDTO {
     public LocalDateTime createdAt;
 
     public String username;
-    public String userPfp;
+    public String userAvatar;
 
     public boolean isOwner;
 
